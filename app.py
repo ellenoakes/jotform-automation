@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 def download_sheet_as_excel():
-    publish_url = os.environ["GOOGLE_SHEET_PUBLISH_URL"]
+    publish_url = os.environ["GOOGLE_SHEET_PUBLISH_URL"].strip()
     resp = requests.get(publish_url)
     resp.raise_for_status()
     local_path = "/tmp/widget_data.xlsx"
