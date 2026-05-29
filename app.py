@@ -44,17 +44,19 @@ def update_jotform_widget(local_excel_path):
         browser.close()
         log.info("JotForm widget updated.")
 
+import threading
+
 @app.route("/webhook", methods=["POST"])
 def jotform_webhook():
-    try:
-        log.info("New submission received — starting update...")
-        excel_path = download_sheet_as_excel()
-        update_jotform_widget(excel_path)
-        return jsonify({"status": "ok"}), 200
-    except Exception as e:
-        log.error(f"Error: {e}", exc_info=True)
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    def run():
+        try:
+            log.info("New submission received — starting update...")
+            excel_path = download_sheet_as_excel()
+            update_jotform_widget(excel_path)
+            log.info("All done!")
+        except Exception as e:
+            log.error(f"Error: {e}", exc_info=True)
+    
+    thread = threading.Thread(target=run)
+    thread.start()
+    return jsonify({"status": "ok"}), 200
