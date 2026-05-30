@@ -1,4 +1,4 @@
-import os, logging
+import os, logging, threading
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 import requests
@@ -44,8 +44,6 @@ def update_jotform_widget(local_excel_path):
         browser.close()
         log.info("JotForm widget updated.")
 
-import threading
-
 @app.route("/webhook", methods=["POST"])
 def jotform_webhook():
     def run():
@@ -56,8 +54,11 @@ def jotform_webhook():
             log.info("All done!")
         except Exception as e:
             log.error(f"Error: {e}", exc_info=True)
-    
-thread = threading.Thread(target=run)
-thread.start()
 
+    thread = threading.Thread(target=run)
+    thread.start()
     return jsonify({"status": "ok"}), 200
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
