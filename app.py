@@ -27,8 +27,8 @@ def update_jotform_widget(local_excel_path):
 
         log.info("Logging into JotForm...")
         page.goto("https://www.jotform.com/login", wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_selector('input[name="email"]', timeout=60000)
-        page.fill('input[name="email"]', os.environ["JOTFORM_EMAIL"])
+        page.wait_for_selector('input[name="username"]', timeout=60000)
+        page.fill('input[name="username"]', os.environ["JOTFORM_EMAIL"])
         page.keyboard.press("Tab")
         page.wait_for_timeout(2000)
         page.wait_for_selector('input[name="password"]', timeout=60000)
