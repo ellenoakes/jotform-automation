@@ -46,6 +46,10 @@ def update_jotform_widget(local_excel_path):
 
 import threading
 
+@app.route("/", methods=["GET"])
+def health_check():
+    return "App is running", 200
+    
 @app.route("/webhook", methods=["POST"])
 def jotform_webhook():
     def run():
@@ -57,6 +61,8 @@ def jotform_webhook():
         except Exception as e:
             log.error(f"Error: {e}", exc_info=True)
     
-    thread = threading.Thread(target=run)
-    thread.start()
+thread = threading.Thread(target=run, daemon=True)
+thread.start()
+
+log.info("Webhook response returned immediately.")
     return jsonify({"status": "ok"}), 200
