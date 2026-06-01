@@ -32,14 +32,16 @@ def update_jotform_widget(local_excel_path):
         page.screenshot(path="/tmp/login_debug.png")
         log.info(f"Page title: {page.title()}")
         log.info(f"Page URL: {page.url}")
-        page.fill('input[name="username"]', os.environ["JOTFORM_EMAIL"])
-        page.fill('input[name="password"]', os.environ["JOTFORM_PASSWORD"])
+
+        page.wait_for_selector('#username', timeout=30000)
+        page.fill('#username', os.environ["JOTFORM_EMAIL"])
+        page.wait_for_selector('#password', timeout=30000)
+        page.fill('#password', os.environ["JOTFORM_PASSWORD"])
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle", timeout=60000)
 
         log.info("Opening form builder...")
         page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="networkidle", timeout=60000)
-        page.screenshot(path="/tmp/login_debug.png")
 
         log.info("Clicking widget...")
         page.click('[data-type="control_spreadsheet"]')
