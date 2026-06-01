@@ -39,6 +39,9 @@ def update_jotform_widget(local_excel_path):
 
         log.info("Opening form builder...")
         page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="domcontentloaded", timeout=60000)
+        page.screenshot(path="/tmp/login_debug.png")
+        log.info(f"Page title: {page.title()}")
+        log.info(f"Page URL: {page.url}")
         page.wait_for_load_state("networkidle", timeout=60000)
 
         log.info("Clicking widget...")
