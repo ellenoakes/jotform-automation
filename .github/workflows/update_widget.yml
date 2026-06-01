@@ -1,0 +1,30 @@
+name: Update JotForm Widget
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run update script
+        env:
+          GOOGLE_SHEET_PUBLISH_URL: ${{ secrets.GOOGLE_SHEET_PUBLISH_URL }}
+          JOTFORM_EMAIL: ${{ secrets.JOTFORM_EMAIL }}
+          JOTFORM_PASSWORD: ${{ secrets.JOTFORM_PASSWORD }}
+          JOTFORM_FORM_ID: ${{ secrets.JOTFORM_FORM_ID }}
+        run: python app.py
