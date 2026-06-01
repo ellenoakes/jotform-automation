@@ -24,7 +24,13 @@ def update_jotform_widget(local_excel_path):
         page = browser.new_page()
 
         log.info("Logging into JotForm...")
-        page.goto("https://www.jotform.com/login", wait_until="networkidle", timeout=60000)
+        try:
+            page.goto("https://www.jotform.com/login", wait_until="networkidle", timeout=60000)
+        except Exception as e:
+            log.info(f"Goto timed out: {e}")
+        page.screenshot(path="/tmp/login_debug.png")
+        log.info(f"Page title: {page.title()}")
+        log.info(f"Page URL: {page.url}")
         page.fill('input[name="username"]', os.environ["JOTFORM_EMAIL"])
         page.fill('input[name="password"]', os.environ["JOTFORM_PASSWORD"])
         page.click('button[type="submit"]')
