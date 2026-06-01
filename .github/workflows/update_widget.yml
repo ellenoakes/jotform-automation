@@ -28,3 +28,10 @@ jobs:
           JOTFORM_PASSWORD: ${{ secrets.JOTFORM_PASSWORD }}
           JOTFORM_FORM_ID: ${{ secrets.JOTFORM_FORM_ID }}
         run: python app.py
+
+      - name: Upload screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: /tmp/login_debug.png
