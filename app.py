@@ -44,7 +44,8 @@ def update_jotform_widget(local_excel_path):
         log.info("Opening form builder...")
         page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(5000)
-        
+        page.screenshot(path="/tmp/formbuilder.png")
+
         log.info("Clicking widget...")
         page.click('[data-type="control_spreadsheet"]')
         page.wait_for_selector('input[type="file"]', timeout=60000)
