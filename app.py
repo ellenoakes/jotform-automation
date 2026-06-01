@@ -28,6 +28,7 @@ def update_jotform_widget(local_excel_path):
             page.goto("https://www.jotform.com/login", wait_until="networkidle", timeout=60000)
         except Exception as e:
             log.info(f"Goto timed out: {e}")
+        page.wait_for_timeout(3000)
         page.screenshot(path="/tmp/login_debug.png")
         log.info(f"Page title: {page.title()}")
         log.info(f"Page URL: {page.url}")
