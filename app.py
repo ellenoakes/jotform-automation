@@ -1,9 +1,7 @@
-import os, logging, threading
-from flask import Flask, request, jsonify
+import os, logging
 from playwright.sync_api import sync_playwright
 import requests
 
-app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
@@ -26,23 +24,14 @@ def update_jotform_widget(local_excel_path):
         page = browser.new_page()
 
         log.info("Logging into JotForm...")
-        page.goto("https://www.jotform.com/login", wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_selector('input[name="username"]', timeout=60000)
+        page.goto("https://www.jotform.com/login", wait_until="networkidle", timeout=60000)
         page.fill('input[name="username"]', os.environ["JOTFORM_EMAIL"])
-        page.keyboard.press("Tab")
-        page.wait_for_timeout(2000)
-        page.wait_for_selector('input[name="password"]', timeout=60000)
         page.fill('input[name="password"]', os.environ["JOTFORM_PASSWORD"])
-        page.wait_for_selector('button[type="submit"]', timeout=60000)
         page.click('button[type="submit"]')
         page.wait_for_load_state("networkidle", timeout=60000)
 
         log.info("Opening form builder...")
-        page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="domcontentloaded", timeout=60000)
-        page.screenshot(path="/tmp/login_debug.png")
-        log.info(f"Page title: {page.title()}")
-        log.info(f"Page URL: {page.url}")
-        page.wait_for_load_state("networkidle", timeout=60000)
+        page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="networkidle", timeout=60000)
 
         log.info("Clicking widget...")
         page.click('[data-type="control_spreadsheet"]')
@@ -56,21 +45,8 @@ def update_jotform_widget(local_excel_path):
         browser.close()
         log.info("JotForm widget updated.")
 
-@app.route("/webhook", methods=["POST"])
-def jotform_webhook():
-    def run():
-        try:
-            log.info("New submission received — starting update...")
-            excel_path = download_sheet_as_excel()
-            update_jotform_widget(excel_path)
-            log.info("All done!")
-        except Exception as e:
-            log.error(f"Error: {e}", exc_info=True)
-
-    thread = threading.Thread(target=run)
-    thread.start()
-    return jsonify({"status": "ok"}), 200
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    log.info("Starting update...")
+    excel_path = download_sheet_as_excel()
+    update_jotform_widget(excel_path)
+    log.info("All done!")
