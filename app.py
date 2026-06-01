@@ -37,7 +37,7 @@ def update_jotform_widget(local_excel_path):
         page.fill('#username', os.environ["JOTFORM_EMAIL"])
         page.wait_for_selector('#password', timeout=30000)
         page.fill('#password', os.environ["JOTFORM_PASSWORD"])
-        page.click('button[type="submit"]')
+        page.click('button:has-text("Log in")')
         page.wait_for_load_state("networkidle", timeout=60000)
 
         log.info("Opening form builder...")
