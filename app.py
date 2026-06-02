@@ -69,9 +69,10 @@ def update_jotform_widget(local_excel_path):
         page.screenshot(path="/tmp/widgetsettings.png")
 
         log.info("Removing existing file...")
-        page.click('a:has-text("Remove file")')
+        page.evaluate("document.querySelector('*[class*=\"remove\"]')?.click()")
         page.wait_for_timeout(2000)
-
+        page.screenshot(path="/tmp/afterremove.png")
+        
         log.info("Uploading new file...")
         page.wait_for_selector('input[type="file"]', timeout=30000)
         page.set_input_files('input[type="file"]', local_excel_path)
