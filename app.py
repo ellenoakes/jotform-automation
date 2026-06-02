@@ -68,8 +68,23 @@ def update_jotform_widget(local_excel_path):
         page.wait_for_timeout(2000)
         page.screenshot(path="/tmp/widgetsettings.png")
 
+        log.info("Accepting cookies...")
+        try:
+            page.click('button:has-text("Allow all")', timeout=5000)
+            page.wait_for_timeout(2000)
+        except:
+            pass
+
         log.info("Removing existing file...")
-        page.evaluate("document.querySelector('*[class*=\"remove\"]')?.click()")
+        page.evaluate("""
+            const elements = document.querySelectorAll('*');
+            for (const el of elements) {
+                if (el.textContent.trim() === 'Remove file') {
+                    el.click();
+                    break;
+                }
+            }
+        """)
         page.wait_for_timeout(2000)
         page.screenshot(path="/tmp/afterremove.png")
         
