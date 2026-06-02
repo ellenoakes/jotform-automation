@@ -59,7 +59,7 @@ def update_jotform_widget(local_excel_path):
         page.wait_for_timeout(2000)
 
         log.info("Clicking widget...")
-        page.click('#id_122')
+        page.evaluate("document.querySelector('#id_122').click()")
         page.wait_for_timeout(2000)
 
         log.info("Opening widget settings...")
