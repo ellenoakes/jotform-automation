@@ -69,7 +69,7 @@ def update_jotform_widget(local_excel_path):
         page.screenshot(path="/tmp/widgetsettings.png")
 
         log.info("Removing existing file...")
-        page.click('text=Remove file')
+        page.click('a:has-text("Remove file")')
         page.wait_for_timeout(2000)
 
         log.info("Uploading new file...")
