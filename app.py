@@ -74,17 +74,9 @@ def update_jotform_widget(local_excel_path):
             page.wait_for_timeout(2000)
         except:
             pass
-
+            
         log.info("Removing existing file...")
-        page.evaluate("""
-            const elements = document.querySelectorAll('*');
-            for (const el of elements) {
-                if (el.textContent.trim() === 'Remove file') {
-                    el.click();
-                    break;
-                }
-            }
-        """)
+        page.click('#remove-btn')
         page.wait_for_timeout(2000)
         page.screenshot(path="/tmp/afterremove.png")
         
