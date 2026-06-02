@@ -42,6 +42,7 @@ def update_jotform_widget(local_excel_path):
         page.wait_for_timeout(5000)
         page.screenshot(path="/tmp/after_login.png")
         log.info(f"After login URL: {page.url}")
+        page.screenshot(path="/tmp/after_login.png")
         log.info("Opening form builder...")
         page.goto(f"https://www.jotform.com/build/{os.environ['JOTFORM_FORM_ID']}", wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(5000)
