@@ -62,7 +62,8 @@ def update_jotform_widget(local_excel_path):
         page.scroll_into_view_if_needed = True
         page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
         page.wait_for_timeout(2000)
-        page.click('#id_122')        
+        page.click('#id_122')
+        page.screenshot(path="/tmp/afterclick.png")
         page.wait_for_selector('input[type="file"]', timeout=60000)
         page.set_input_files('input[type="file"]', local_excel_path)
         page.wait_for_timeout(3000)
