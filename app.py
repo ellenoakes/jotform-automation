@@ -47,7 +47,21 @@ def update_jotform_widget(local_excel_path):
         page.wait_for_timeout(5000)
         page.screenshot(path="/tmp/formbuilder.png")
 
+        log.info("Closing popups...")
+        try:
+            page.click('[aria-label="Close"]', timeout=5000)
+        except:
+            pass
+        try:
+            page.keyboard.press("Escape")
+        except:
+            pass
+        page.wait_for_timeout(2000)
+
         log.info("Clicking widget...")
+        page.scroll_into_view_if_needed = True
+        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+        page.wait_for_timeout(2000)
         page.click('[data-type="control_spreadsheet"]')
         page.wait_for_selector('input[type="file"]', timeout=60000)
         page.set_input_files('input[type="file"]', local_excel_path)
